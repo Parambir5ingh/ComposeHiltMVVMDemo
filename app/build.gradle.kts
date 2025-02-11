@@ -92,5 +92,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     implementation("io.coil-kt:coil-compose:2.3.0")
-//    implementation("io.coil-kt:coil-network-okhttp:2.3.0")
+
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0")  // For ViewModel & LiveData integration
+    implementation ("androidx.compose.runtime:runtime-livedata:1.4.0") // For observeAsState
 }

@@ -1,6 +1,7 @@
 package com.example.daggerhiltdemo.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,21 +16,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
 import coil.compose.AsyncImage
 import com.example.daggerhiltdemo.ui.theme.DaggerHiltDemoTheme
 import com.example.daggermvvmdemo.models.ProductModel
@@ -38,11 +41,13 @@ import com.example.daggermvvmdemo.models.ProductModel
 * Created by Parambir Singh ON 2025-02-08
 */
 @Composable
-fun HomeView(products: ArrayList<ProductModel>) {
+fun HomeView(products: ArrayList<ProductModel>, showProgressIndicator: LiveData<Boolean>) {
 
     // State to manage which product's details to show
     var selectedProduct = remember { mutableStateOf<ProductModel?>(null) }
     var showDialog = remember { mutableStateOf(false) }
+
+    val showProgress = showProgressIndicator.observeAsState()
 
     // Show dialog if a product is selected
     if (showDialog.value && selectedProduct != null) {
@@ -53,35 +58,48 @@ fun HomeView(products: ArrayList<ProductModel>) {
     }
 
     DaggerHiltDemoTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.LightGray)
-        ) {
-            CustomTopAppBar()
+        Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
+                    .background(Color.LightGray)
             ) {
-                var index = 0
-                products.forEach { message ->
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.White,
-                        ), modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .padding(10.dp),
-                        onClick = {
-                            selectedProduct.value = message
-                            showDialog.value = true
+                CustomTopAppBar()
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    var index = 0
+                    products.forEach { message ->
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White,
+                            ), modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(10.dp),
+                            onClick = {
+                                selectedProduct.value = message
+                                showDialog.value = true
+                            }
+                        ) {
+                            ProductRow(message)
                         }
-                    ) {
-                        ProductRow(message)
+                        index++
                     }
-                    index++
                 }
+            }
+            showProgress.value?.let {
+                if (it)
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .width(64.dp)
+                            .align(Alignment.Center),
+                        color = MaterialTheme.colorScheme.secondary,
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        strokeWidth = 8.dp
+                    )
             }
         }
     }

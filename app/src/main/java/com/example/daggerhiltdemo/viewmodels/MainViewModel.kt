@@ -1,6 +1,7 @@
 package com.example.daggermvvmdemo.viewmodels
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.daggermvvmdemo.models.ProductModel
@@ -15,12 +16,17 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(val repository: ProductRepository) : ViewModel() {
 
+    var _progress = MutableLiveData<Boolean>()
+    var progress: LiveData<Boolean> = _progress
+
     val productsLiveData: LiveData<List<ProductModel>>?
         get() = repository.products
 
     init {
         viewModelScope.launch {
+            _progress.postValue(true)
             repository.getProducts()
+            _progress.postValue(false)
         }
     }
 

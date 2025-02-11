@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.example.daggerhiltdemo.view.HomeView
 import com.example.daggermvvmdemo.viewmodels.MainViewModel
@@ -26,7 +27,7 @@ class MainActivity : ComponentActivity() {
 
             enableEdgeToEdge()
             setContent {
-                HomeView(productsList as ArrayList)
+                HomeView(productsList as ArrayList, mainViewModel.progress)
             }
         }
 
@@ -36,6 +37,6 @@ class MainActivity : ComponentActivity() {
     @Preview
     @Composable
     fun homePreview() {
-        HomeView(java.util.ArrayList())
+        HomeView(java.util.ArrayList(), mainViewModel.progress)
     }
 }
