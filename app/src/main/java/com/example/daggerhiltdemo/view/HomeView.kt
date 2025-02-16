@@ -12,13 +12,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,8 +48,7 @@ fun HomeView(products: ArrayList<ProductModel>, showProgressIndicator: LiveData<
     // Show dialog if a product is selected
     if (showDialog.value && selectedProduct != null) {
         ProductDescriptionDialog(
-            onDismiss = { showDialog.value = false },
-            productModel = selectedProduct.value!!
+            onDismiss = { showDialog.value = false }, productModel = selectedProduct.value!!
         )
     }
 
@@ -72,18 +67,17 @@ fun HomeView(products: ArrayList<ProductModel>, showProgressIndicator: LiveData<
                 ) {
                     var index = 0
                     products.forEach { message ->
-                        Card(
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color.White,
-                            ), modifier = Modifier
+                        Card(colors = CardDefaults.cardColors(
+                            containerColor = Color.White,
+                        ),
+                            modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
                                 .padding(10.dp),
                             onClick = {
                                 selectedProduct.value = message
                                 showDialog.value = true
-                            }
-                        ) {
+                            }) {
                             ProductRow(message)
                         }
                         index++
@@ -91,15 +85,14 @@ fun HomeView(products: ArrayList<ProductModel>, showProgressIndicator: LiveData<
                 }
             }
             showProgress.value?.let {
-                if (it)
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .width(64.dp)
-                            .align(Alignment.Center),
-                        color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                        strokeWidth = 8.dp
-                    )
+                if (it) CircularProgressIndicator(
+                    modifier = Modifier
+                        .width(64.dp)
+                        .align(Alignment.Center),
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    strokeWidth = 8.dp
+                )
             }
         }
     }
@@ -110,7 +103,9 @@ fun HomeView(products: ArrayList<ProductModel>, showProgressIndicator: LiveData<
 fun ProductRow(productModel: ProductModel) {
     Row(modifier = Modifier.padding(10.dp)) {
         AsyncImage(
-            model = productModel.image, contentDescription = "Image description", modifier = Modifier
+            model = productModel.image,
+            contentDescription = "Image description",
+            modifier = Modifier
                 .height(70.dp)
                 .width(70.dp)
                 .padding(end = 10.dp)
@@ -151,20 +146,18 @@ fun GreetingPreview() {
 
 @Composable
 fun CustomTopAppBar() {
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 18.dp)
-            .background(Color.DarkGray),
-        verticalAlignment = Alignment.CenterVertically,
+            .background(Color.Transparent),
+        contentAlignment = Alignment.Center
     ) {
         Text(
-            "MVVM with Hilt", style = MaterialTheme.typography.labelLarge, modifier = Modifier
-                .weight(1f)
-                .padding(10.dp), color = Color.White
+            "MVVM with Hilt",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(10.dp),
+            color = Color.Black
         )
-        IconButton(onClick = { /* Handle action */ }) {
-            Icon(Icons.Default.Close, contentDescription = "Close")
-        }
     }
 }
