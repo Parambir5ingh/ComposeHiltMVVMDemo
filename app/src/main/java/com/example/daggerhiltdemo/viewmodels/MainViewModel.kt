@@ -1,5 +1,6 @@
 package com.example.daggermvvmdemo.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.daggermvvmdemo.models.ProductModel
 import com.example.daggermvvmdemo.repositories.ProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,7 +21,9 @@ class MainViewModel @Inject constructor(val repository: ProductRepository) : Vie
     var _progress = MutableLiveData<Boolean>()
     var progress: LiveData<Boolean> = _progress
 
-    val productsLiveData: LiveData<List<ProductModel>>?
+    var selectedProduct: ProductModel? = null
+
+    val productsLiveData: StateFlow<List<ProductModel>>?
         get() = repository.products
 
     init {
@@ -27,6 +31,7 @@ class MainViewModel @Inject constructor(val repository: ProductRepository) : Vie
             _progress.postValue(true)
             repository.getProducts()
             _progress.postValue(false)
+            Log.w("VIEWMODEL CALLED", "-----------------------------")
         }
     }
 

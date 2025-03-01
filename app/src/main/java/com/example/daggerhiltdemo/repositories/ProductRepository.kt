@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.example.daggermvvmdemo.db.AppDatabase
 import com.example.daggermvvmdemo.models.ProductModel
 import com.example.daggermvvmdemo.retrofit.FakeProductsApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 /*
@@ -12,15 +14,15 @@ import javax.inject.Inject
 */
 class ProductRepository @Inject constructor(val fakeProductsApi: FakeProductsApi, val appDb: AppDatabase) {
 
-    private val _products = MutableLiveData<List<ProductModel>>()
-    var products: LiveData<List<ProductModel>>? = null
+    private val _products = MutableStateFlow<List<ProductModel>>(emptyList())
+    var products: StateFlow<List<ProductModel>>? = null
         get() = _products
 
     suspend fun getProducts() {
         val result = fakeProductsApi.getProducts()
         if (result.isSuccessful && result.body() != null) {
             appDb.getProductsDao().addProducts(result.body()!!)
-            _products.postValue(result.body())
+            _products.emit(result.body()!!)
         }
     }
 }

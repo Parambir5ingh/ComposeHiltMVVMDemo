@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -95,4 +96,6 @@ dependencies {
 
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0")  // For ViewModel & LiveData integration
     implementation ("androidx.compose.runtime:runtime-livedata:1.4.0") // For observeAsState
+
+    implementation ("androidx.navigation:navigation-compose:2.8.8")
 }
